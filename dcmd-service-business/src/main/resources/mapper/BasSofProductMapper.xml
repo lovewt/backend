@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.service.business.mapper.BasSofProductMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.service.business.entity.BasSofProduct">
+    <id column="software_num" jdbcType="INTEGER" property="softwareNum" />
+    <result column="software_sys_code" jdbcType="VARCHAR" property="softwareSysCode" />
+    <result column="software_name" jdbcType="VARCHAR" property="softwareName" />
+    <result column="software_code" jdbcType="VARCHAR" property="softwareCode" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="core_software_mark" jdbcType="VARCHAR" property="coreSoftwareMark" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="launch_date" jdbcType="VARCHAR" property="launchDate" />
+    <result column="offline_date" jdbcType="VARCHAR" property="offlineDate" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="business_owner" jdbcType="VARCHAR" property="businessOwner" />
+    <result column="product_leader" jdbcType="VARCHAR" property="productLeader" />
+    <result column="ba_primary" jdbcType="VARCHAR" property="baPrimary" />
+    <result column="ba_secondary" jdbcType="VARCHAR" property="baSecondary" />
+    <result column="sa_primary" jdbcType="VARCHAR" property="saPrimary" />
+    <result column="sa_secondary" jdbcType="VARCHAR" property="saSecondary" />
+    <result column="test_leader" jdbcType="VARCHAR" property="testLeader" />
+    <result column="service_primary" jdbcType="VARCHAR" property="servicePrimary" />
+    <result column="service_secondary" jdbcType="VARCHAR" property="serviceSecondary" />
+    <result column="Project_leader" jdbcType="VARCHAR" property="projectLeader" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="customer_sys_name" jdbcType="VARCHAR" property="customerSysName" />
+    <result column="business_rep" jdbcType="VARCHAR" property="businessRep" />
+    <result column="procure_method" jdbcType="VARCHAR" property="procureMethod" />
+    <result column="dev_method" jdbcType="VARCHAR" property="devMethod" />
+    <result column="cooperation_partner" jdbcType="VARCHAR" property="cooperationPartner" />
+    <result column="ac_level" jdbcType="VARCHAR" property="acLevel" />
+    <result column="dr_level" jdbcType="VARCHAR" property="drLevel" />
+    <result column="infra_id" jdbcType="VARCHAR" property="infraId" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+
+  <sql id="reuse">
+    software_num, software_sys_code, software_name, software_code, type, core_software_mark,
+    status, launch_date, offline_date, dept, business_owner, product_leader, ba_primary,
+    ba_secondary, sa_primary, sa_secondary, test_leader, service_primary, service_secondary,
+    Project_leader, description, customer_sys_name, business_rep, procure_method, dev_method,
+    cooperation_partner, ac_level, dr_level, infra_id, state
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bas_sof_product
+    where software_num = #{softwareNum,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.service.business.entity.BasSofProduct">
+    insert into bas_sof_product (software_num, software_sys_code, software_name, 
+      software_code, type, core_software_mark, 
+      status, launch_date, offline_date, 
+      dept, business_owner, product_leader, 
+      ba_primary, ba_secondary, sa_primary, 
+      sa_secondary, test_leader, service_primary, 
+      service_secondary, Project_leader, description, 
+      customer_sys_name, business_rep, procure_method, 
+      dev_method, cooperation_partner, ac_level, 
+      dr_level, infra_id, state
+      )
+    values (#{softwareNum,jdbcType=INTEGER}, #{softwareSysCode,jdbcType=VARCHAR}, #{softwareName,jdbcType=VARCHAR}, 
+      #{softwareCode,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{coreSoftwareMark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{launchDate,jdbcType=VARCHAR}, #{offlineDate,jdbcType=VARCHAR}, 
+      #{dept,jdbcType=VARCHAR}, #{businessOwner,jdbcType=VARCHAR}, #{productLeader,jdbcType=VARCHAR}, 
+      #{baPrimary,jdbcType=VARCHAR}, #{baSecondary,jdbcType=VARCHAR}, #{saPrimary,jdbcType=VARCHAR}, 
+      #{saSecondary,jdbcType=VARCHAR}, #{testLeader,jdbcType=VARCHAR}, #{servicePrimary,jdbcType=VARCHAR}, 
+      #{serviceSecondary,jdbcType=VARCHAR}, #{projectLeader,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{customerSysName,jdbcType=VARCHAR}, #{businessRep,jdbcType=VARCHAR}, #{procureMethod,jdbcType=VARCHAR}, 
+      #{devMethod,jdbcType=VARCHAR}, #{cooperationPartner,jdbcType=VARCHAR}, #{acLevel,jdbcType=VARCHAR}, 
+      #{drLevel,jdbcType=VARCHAR}, #{infraId,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.service.business.entity.BasSofProduct">
+    update bas_sof_product
+    set software_sys_code = #{softwareSysCode,jdbcType=VARCHAR},
+      software_name = #{softwareName,jdbcType=VARCHAR},
+      software_code = #{softwareCode,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      core_software_mark = #{coreSoftwareMark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      launch_date = #{launchDate,jdbcType=VARCHAR},
+      offline_date = #{offlineDate,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      business_owner = #{businessOwner,jdbcType=VARCHAR},
+      product_leader = #{productLeader,jdbcType=VARCHAR},
+      ba_primary = #{baPrimary,jdbcType=VARCHAR},
+      ba_secondary = #{baSecondary,jdbcType=VARCHAR},
+      sa_primary = #{saPrimary,jdbcType=VARCHAR},
+      sa_secondary = #{saSecondary,jdbcType=VARCHAR},
+      test_leader = #{testLeader,jdbcType=VARCHAR},
+      service_primary = #{servicePrimary,jdbcType=VARCHAR},
+      service_secondary = #{serviceSecondary,jdbcType=VARCHAR},
+      Project_leader = #{projectLeader,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      customer_sys_name = #{customerSysName,jdbcType=VARCHAR},
+      business_rep = #{businessRep,jdbcType=VARCHAR},
+      procure_method = #{procureMethod,jdbcType=VARCHAR},
+      dev_method = #{devMethod,jdbcType=VARCHAR},
+      cooperation_partner = #{cooperationPartner,jdbcType=VARCHAR},
+      ac_level = #{acLevel,jdbcType=VARCHAR},
+      dr_level = #{drLevel,jdbcType=VARCHAR},
+      infra_id = #{infraId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where software_num = #{softwareNum,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="reuse"/>
+    from bas_sof_product
+    where software_num = #{softwareNum,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="reuse"/>
+    from bas_sof_product
+  </select>
+
+  <select id="findAllProduct" resultType="com.dcmd.service.business.entity.Business">
+      select
+      software_num AS softwareNum,
+      software_name AS softwareName
+      from bas_sof_product
+  </select>
+</mapper>

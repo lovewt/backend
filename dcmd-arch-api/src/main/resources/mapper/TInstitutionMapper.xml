@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.TInstitutionMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.TInstitution">
+    <id column="InstNo" jdbcType="VARCHAR" property="instno" />
+    <result column="InstName" jdbcType="VARCHAR" property="instname" />
+    <result column="InstProperty" jdbcType="VARCHAR" property="instproperty" />
+    <result column="HighInstNo" jdbcType="VARCHAR" property="highinstno" />
+    <result column="HighInstName" jdbcType="VARCHAR" property="highinstname" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_institution
+    where InstNo = #{instno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.TInstitution">
+    insert into t_institution (InstNo, InstName, InstProperty, 
+      HighInstNo, HighInstName)
+    values (#{instno,jdbcType=VARCHAR}, #{instname,jdbcType=VARCHAR}, #{instproperty,jdbcType=VARCHAR}, 
+      #{highinstno,jdbcType=VARCHAR}, #{highinstname,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.TInstitution">
+    update t_institution
+    set InstName = #{instname,jdbcType=VARCHAR},
+      InstProperty = #{instproperty,jdbcType=VARCHAR},
+      HighInstNo = #{highinstno,jdbcType=VARCHAR},
+      HighInstName = #{highinstname,jdbcType=VARCHAR}
+    where InstNo = #{instno,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select InstNo, InstName, InstProperty, HighInstNo, HighInstName
+    from t_institution
+    where InstNo = #{instno,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select InstNo, InstName, InstProperty, HighInstNo, HighInstName
+    from t_institution
+  </select>
+
+  <select id="getInstOfIT" resultMap="BaseResultMap">
+   SELECT
+	InstNo,
+	substring_index( InstName, '信息科技中心',- 1 ) AS InstName
+FROM
+	t_institution
+WHERE
+	InstProperty = 'IT'
+  </select>
+
+  <select id="getInstOfBU" resultMap="BaseResultMap">
+    SELECT
+	InstNo,
+	substring_index( InstName, '四川省农村信用社联合社',- 1 ) AS InstName
+FROM
+	t_institution
+WHERE
+	InstProperty = 'BU'
+  </select>
+</mapper>

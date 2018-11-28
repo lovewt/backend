@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.IntInvokeRelationMapper">
+    <sql id="selectDatas">
+        SELECT
+        t1.int_service_num AS intServiceNum,
+        t1.invoke_int_service_num AS invokeIntServiceNum,
+        t1.state AS state,
+        t1.valid_date AS validDate,
+        t1.origin_type AS originType,
+        t1.status AS status,
+        t2.int_name_cn AS bIntNameCn,
+        t2.int_name_en AS intNameEn,
+        t3.software_name AS bSoftName,
+        t4.int_name_cn AS dIntName,
+        t4.int_name_en AS bIntNameEn,
+        t5.software_name AS dSoftName,
+        t6.Value AS stateName
+        FROM int_invoke_relation t1
+        INNER JOIN int_information t2 ON t1.int_service_num=t2.int_service_num
+        INNER JOIN bas_sof_product t3 ON t2.software_num=t3.software_num
+        INNER JOIN int_information t4 ON t1.invoke_int_service_num=t4.int_service_num
+        INNER JOIN bas_sof_product t5 ON t4.software_num=t5.software_num
+        LEFT JOIN bas_parameter t6 ON t6.Type='RecordStatus' AND t1.state=t6.Key
+    </sql>
+    <select id="getAllDatas" resultType="com.dcmd.arch.api.entity.IntInvokeRelation">
+        <include refid="selectDatas"/>
+        WHERE t1.state!='Invalid' and t1.status!=1 order by t3.software_name,
+        t5.software_name, t2.int_name_en, t4.int_name_en
+    </select>
+
+    <select id="getCheckDatas" resultType="com.dcmd.arch.api.entity.IntInvokeRelation">
+        <include refid="selectDatas"/>
+        WHERE t1.status=1;
+    </select>
+
+    <select id="getSoftLines" resultType="map">
+      SELECT DISTINCT `Key` AS value ,Value AS label FROM bas_parameter WHERE Type='SoftSys'
+    </select>
+    <select id="getSoftProduct" parameterType="String" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.software_name AS label,t.software_num AS value FROM bas_sof_product t where t.software_sys_code=#{softlineId}
+    </select>
+
+    <select id="getApiNameBySoftnum" parameterType="String" resultType="com.dcmd.arch.api.entity.Dropdown">
+      select t.int_service_num AS value,t.int_name_cn AS label from int_information t where t.software_num=#{softwareId}
+    </select>
+
+    <select id="searchState" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='RecordStatus'
+    </select>
+
+    <insert id="insert" parameterType="java.util.Map">
+        insert into int_invoke_relation(int_service_num,invoke_int_service_num,state,valid_date,origin_type,status) values (#{intServiceNum},#{invokeIntServiceNum},#{state},#{validDate},#{originType},'1')
+    </insert>
+    <update id="update" parameterType="java.util.Map">
+      update int_invoke_relation set state=#{state},valid_date=#{validDate},origin_type=#{originType},status='1' where int_service_num=#{intServiceNum} and invoke_int_service_num=#{invokeIntServiceNum}
+    </update>
+
+    <update id="updateCheck" parameterType="java.util.Map">
+      update int_invoke_relation set status=0 where int_service_num=#{intServiceNum} and invoke_int_service_num=#{invokeIntServiceNum}
+    </update>
+    <delete id="deleteCheckByNum" parameterType="java.util.Map">
+      delete from int_invoke_relation where int_service_num=#{intServiceNum} and invoke_int_service_num=#{invokeIntServiceNum}
+       </delete>
+
+    <update id="delectData" parameterType="java.util.Map">
+      update int_invoke_relation set state='Invalid',status='1' where int_service_num=#{intServiceNum} and invoke_int_service_num=#{invokeIntServiceNum}
+    </update>
+
+    <select id="queryNumAndName" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT a.int_service_num AS value ,a.int_name_en AS label FROM int_information a WHERE a.state!='Invalid'
+    </select>
+
+    <select id="queryRows" parameterType="com.dcmd.arch.api.entity.IntInvokeRelation" resultType="Integer">
+        SELECT COUNT(1) as num FROM int_information WHERE int_service_num IN(#{intServiceNum},#{invokeIntServiceNum})
+    </select>
+
+    <select id="queryCount" parameterType="com.dcmd.arch.api.entity.IntInvokeRelation" resultType="Integer">
+        SELECT COUNT(*) as num FROM int_invoke_relation WHERE int_service_num=#{intServiceNum} AND invoke_int_service_num = #{invokeIntServiceNum}
+    </select>
+
+    <insert id="insertExcelData" parameterType="com.dcmd.arch.api.entity.IntInvokeRelation">
+        insert into int_invoke_relation(int_service_num,invoke_int_service_num,state,valid_date,origin_type,status) values (#{intServiceNum},#{invokeIntServiceNum},#{state},#{validDate},#{originType},'1')
+    </insert>
+    <select id="queryNumByName"  resultType="String">
+        SELECT int_service_num FROM int_information WHERE int_name_en=#{nameEn}
+    </select>
+
+    <select id="queryState"  resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE Type='RecordStatus'
+    </select>
+
+    <select id="advancedSearch" parameterType="java.util.Map" resultType="com.dcmd.arch.api.entity.IntInvokeRelation">
+        <include refid="selectDatas"/>
+        WHERE t1.state!='Invalid' AND t1.status!=1
+
+        <if test="softLines !=null and softLines != ''">
+            AND t3.software_sys_code = #{softLines}
+        </if>
+        <if test="softProductName !=null and softProductName != ''">
+            AND t3.software_name = #{softProductName}
+        </if>
+        <if test="intServiceNum !=null and intServiceNum != ''">
+            AND t1.int_service_num = #{intServiceNum}
+        </if>
+        <if test="state !=null and state != ''">
+            AND t1.state = #{state}
+        </if>
+        order by t3.software_name,
+        t5.software_name, t2.int_name_en, t4.int_name_en
+    </select>
+</mapper>

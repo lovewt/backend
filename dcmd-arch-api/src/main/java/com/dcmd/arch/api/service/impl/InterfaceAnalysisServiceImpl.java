@@ -1,0 +1,170 @@
+package com.dcmd.arch.api.service.impl;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dc.dcit.common.util.ReadExcel;
+import com.dcmd.arch.api.entity.Dropdown;
+import com.dcmd.arch.api.entity.InterfaceAnalysis;
+import com.dcmd.arch.api.mapper.InterfaceAnalysisMapper;
+import com.dcmd.arch.api.service.InterfaceAnalysisService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class InterfaceAnalysisServiceImpl implements InterfaceAnalysisService {
+    private static Logger logger = LoggerFactory.getLogger(IntInvokeRelationServiceImpl.class);
+    @Autowired
+    private InterfaceAnalysisMapper interfaceAnalysisMapper;
+
+    @Override
+    public List<InterfaceAnalysis> getAllDatas() throws Exception {
+        return interfaceAnalysisMapper.getAllDatas();
+    }
+
+    @Override
+    public List<InterfaceAnalysis> getCheckDatas() throws Exception {
+        return interfaceAnalysisMapper.getCheckDatas();
+    }
+
+    @Override
+    public List<Map<String, String>> getSoftLines() throws Exception {
+        return interfaceAnalysisMapper.getSoftLines();
+    }
+
+    @Override
+    public List<Dropdown> getSoftProduct(String softlineId) throws Exception {
+        return interfaceAnalysisMapper.getSoftProduct(softlineId);
+    }
+
+    @Override
+    public List<Dropdown> getApiNameBySoftnum(String softwareId) throws Exception {
+        return interfaceAnalysisMapper.getApiNameBySoftnum(softwareId);
+    }
+
+    @Override
+    public List<Dropdown> searchState() throws Exception {
+        return interfaceAnalysisMapper.searchState();
+    }
+
+    @Override
+    public int insert(JSONObject jsonObject) throws Exception {
+        if (jsonObject == null) {
+            throw new RuntimeException("解析异常");
+        }
+        Map<String, String> map = JSON.toJavaObject(jsonObject, Map.class);
+        return interfaceAnalysisMapper.insert(map);
+    }
+
+    @Override
+    public int update(JSONObject jsonObject) throws Exception {
+        if (jsonObject == null) {
+            throw new RuntimeException("解析异常");
+        }
+        Map<String, String> map = JSON.toJavaObject(jsonObject, Map.class);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        map.put("updtDate", format.format(new Date()));
+        return interfaceAnalysisMapper.update(map);
+    }
+
+    @Override
+    public int updateCheck(JSONObject jsonObject) throws Exception {
+        if (jsonObject == null) {
+            throw new RuntimeException("解析异常");
+        }
+        Map<String, String> map = JSON.toJavaObject(jsonObject, Map.class);
+        return interfaceAnalysisMapper.updateCheck(map);
+    }
+
+    @Override
+    public int batchDelectCheckData(String[] ids) throws Exception {
+        return interfaceAnalysisMapper.deleteCheckByNum(ids);
+
+    }
+
+    @Override
+    public int batchUpdateCheck(String[] ids) throws Exception {
+        return interfaceAnalysisMapper.batchUpdateCheck(ids);
+    }
+
+    @Override
+    public int batchDelectData(String[] ids) throws Exception {
+        return interfaceAnalysisMapper.batchDelectData(ids);
+    }
+
+    @Override
+    public int release(String[] ids) throws Exception {
+        return interfaceAnalysisMapper.release(ids);
+    }
+
+    @Override
+    public int offLine(String[] ids) throws Exception {
+        return interfaceAnalysisMapper.offLine(ids);
+    }
+
+    @Override
+    public List<Dropdown> getClasses() throws Exception {
+        return interfaceAnalysisMapper.getClasses();
+    }
+
+    @Override
+    public int importData(MultipartFile file) throws Exception {
+        logger.info("uploadFile:" + file);
+        if (file == null) {
+            throw new RuntimeException("文件为空或不存在");
+        }
+        ReadExcel<InterfaceAnalysis> readExcel = new ReadExcel<InterfaceAnalysis>(new InterfaceAnalysis());
+        readExcel.setStartCol(0);
+        readExcel.setStartRow(1);
+        String[] columns = {"softwareName", "greatClassName", "stateName", "intNameCn", "intNameEn", "description", "url", "reviewNumber", "downlineDate", "releaseDate", "serviceFit", "consumerFit", "interfaceVersion", "remark"};
+        readExcel.setColumns(columns);
+        Long start = (new Date()).getTime();
+        logger.info("开始读取excel文档");
+        List<InterfaceAnalysis> interfaceList = readExcel.parseExcel2ObjList(file);
+        Long end = (new Date()).getTime();
+        logger.info("excel文档读取结束，用时：" + (end - start));
+        logger.info("读取到信息个数:" + interfaceList.size());
+        if (interfaceList.isEmpty()) {
+            throw new RuntimeException("未读取到信息");
+        }
+        List<Dropdown> numAndNameList = interfaceAnalysisMapper.queryNumAndName();
+        List<Dropdown> statesList = interfaceAnalysisMapper.queryState();
+        List<Dropdown> classesList = interfaceAnalysisMapper.getClasses();
+        interfaceList.stream().forEach(interfaces -> {
+            Integer rows = interfaceAnalysisMapper.queryRows(interfaces.getIntNameEn(), interfaces.getInterfaceVersion());
+            if (rows != 0) {
+                throw new RuntimeException("数据已存在" + " " + interfaces.toString());
+            }
+            Integer counts = interfaceAnalysisMapper.queryCount(interfaces.getSoftwareName());
+            if (counts == 0) {
+                throw new RuntimeException("软件产品不存在" + " " + interfaces.getSoftwareName());
+            }
+            numAndNameList.stream().forEach(numAndName -> {
+                if (StringUtils.isNotBlank(interfaces.getSoftwareName()) && interfaces.getSoftwareName().equals(numAndName.getLabel())) {
+                    interfaces.setSoftwareNum(numAndName.getValue());
+                }
+            });
+            statesList.stream().forEach(states -> {
+                if (StringUtils.isNotBlank(interfaces.getStateName()) && interfaces.getStateName().equals(states.getLabel())) {
+                    interfaces.setState(states.getValue());
+                }
+            });
+            classesList.stream().forEach(classes -> {
+                if (StringUtils.isNotBlank(interfaces.getGreatClassName()) && interfaces.getGreatClassName().equals(classes.getLabel())) {
+                    interfaces.setGreatClass(classes.getValue());
+                }
+            });
+            interfaceAnalysisMapper.insertExcelData(interfaces);
+        });
+
+        return 0;
+    }
+}

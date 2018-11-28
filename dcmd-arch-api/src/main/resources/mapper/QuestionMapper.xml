@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.QuestionMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.Question">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="SoftProd" jdbcType="VARCHAR" property="softprod" />
+    <result column="Browser" jdbcType="VARCHAR" property="browser" />
+    <result column="Version" jdbcType="VARCHAR" property="version" />
+    <result column="Issue" jdbcType="VARCHAR" property="issue" />
+    <result column="Solution" jdbcType="VARCHAR" property="solution" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_br_comp_issue
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.Question">
+    insert into t_br_comp_issue (ID, SoftProd, Browser,
+      Version, Issue, Solution
+      )
+    values (#{id,jdbcType=INTEGER}, #{softprod,jdbcType=VARCHAR}, #{browser,jdbcType=VARCHAR},
+      #{version,jdbcType=VARCHAR}, #{issue,jdbcType=VARCHAR}, #{solution,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.Question">
+    update t_br_comp_issue
+    set SoftProd = #{softprod,jdbcType=VARCHAR},
+      Browser = #{browser,jdbcType=VARCHAR},
+      Version = #{version,jdbcType=VARCHAR},
+      Issue = #{issue,jdbcType=VARCHAR},
+      Solution = #{solution,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, SoftProd, Browser, Version, Issue, Solution
+    from t_br_comp_issue
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select *
+    from t_br_comp_issue
+  </select>
+
+</mapper>

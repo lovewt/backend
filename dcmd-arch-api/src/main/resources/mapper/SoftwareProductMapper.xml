@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.SoftwareProductMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.SoftwareProduct">
+    <id column="software_num" jdbcType="VARCHAR" property="softwareNum" />
+    <result column="software_sys_code" jdbcType="VARCHAR" property="softwareSysCode" />
+    <result column="software_name" jdbcType="VARCHAR" property="softwareName" />
+    <result column="software_sys_name" jdbcType="VARCHAR" property="softwareSysName" />
+    <result column="software_code" jdbcType="VARCHAR" property="softwareCode" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="core_software_mark" jdbcType="VARCHAR" property="coreSoftwareMark" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="launch_date" jdbcType="VARCHAR" property="launchDate" />
+    <result column="offline_date" jdbcType="VARCHAR" property="offlineDate" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="business_owner" jdbcType="VARCHAR" property="businessOwner" />
+    <result column="product_leader" jdbcType="VARCHAR" property="productLeader" />
+    <result column="ba_primary" jdbcType="VARCHAR" property="baPrimary" />
+    <result column="ba_secondary" jdbcType="VARCHAR" property="baSecondary" />
+    <result column="sa_primary" jdbcType="VARCHAR" property="saPrimary" />
+    <result column="sa_secondary" jdbcType="VARCHAR" property="saSecondary" />
+    <result column="test_leader" jdbcType="VARCHAR" property="testLeader" />
+    <result column="service_primary" jdbcType="VARCHAR" property="servicePrimary" />
+    <result column="service_secondary" jdbcType="VARCHAR" property="serviceSecondary" />
+    <result column="Project_leader" jdbcType="VARCHAR" property="projectLeader" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="customer_sys_name" jdbcType="VARCHAR" property="customerSysName" />
+    <result column="business_rep" jdbcType="VARCHAR" property="businessRep" />
+    <result column="procure_method" jdbcType="VARCHAR" property="procureMethod" />
+    <result column="dev_method" jdbcType="VARCHAR" property="devMethod" />
+    <result column="cooperation_partner" jdbcType="VARCHAR" property="cooperationPartner" />
+    <result column="ac_level" jdbcType="VARCHAR" property="acLevel" />
+    <result column="dr_level" jdbcType="VARCHAR" property="drLevel" />
+    <result column="infra_id" jdbcType="VARCHAR" property="infraId" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bas_sof_product
+    where software_num = #{softwareNum}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.SoftwareProduct">
+    insert into bas_sof_product (software_num, software_sys_code, software_name, 
+      software_code, type, core_software_mark, 
+      status, launch_date, offline_date, 
+      dept, business_owner, product_leader, 
+      ba_primary, ba_secondary, sa_primary, 
+      sa_secondary, test_leader, service_primary, 
+      service_secondary, Project_leader, description, 
+      customer_sys_name, business_rep, procure_method, 
+      dev_method, cooperation_partner, ac_level, 
+      dr_level, infra_id, state
+      )
+    values (#{softwareNum}, #{softwareSysCode}, #{softwareName},
+      #{softwareCode}, #{type}, #{coreSoftwareMark},
+      #{status}, #{launchDate}, #{offlineDate},
+      #{dept}, #{businessOwner}, #{productLeader},
+      #{baPrimary}, #{baSecondary}, #{saPrimary},
+      #{saSecondary}, #{testLeader}, #{servicePrimary},
+      #{serviceSecondary}, #{projectLeader}, #{description},
+      #{customerSysName}, #{businessRep}, #{procureMethod},
+      #{devMethod}, #{cooperationPartner}, #{acLevel},
+      #{drLevel}, #{infraId}, #{state}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.SoftwareProduct">
+    update bas_sof_product
+    set software_sys_code = #{softwareSysCode},
+      software_name = #{softwareName},
+      software_code = #{softwareCode},
+      type = #{type},
+      core_software_mark = #{coreSoftwareMark},
+      status = #{status},
+      launch_date = #{launchDate},
+      offline_date = #{offlineDate},
+      dept = #{dept},
+      business_owner = #{businessOwner},
+      product_leader = #{productLeader},
+      ba_primary = #{baPrimary},
+      ba_secondary = #{baSecondary,jdbcType=VARCHAR},
+      sa_primary = #{saPrimary,jdbcType=VARCHAR},
+      sa_secondary = #{saSecondary,jdbcType=VARCHAR},
+      test_leader = #{testLeader,jdbcType=VARCHAR},
+      service_primary = #{servicePrimary,jdbcType=VARCHAR},
+      service_secondary = #{serviceSecondary,jdbcType=VARCHAR},
+      Project_leader = #{projectLeader,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      customer_sys_name = #{customerSysName,jdbcType=VARCHAR},
+      business_rep = #{businessRep,jdbcType=VARCHAR},
+      procure_method = #{procureMethod,jdbcType=VARCHAR},
+      dev_method = #{devMethod,jdbcType=VARCHAR},
+      cooperation_partner = #{cooperationPartner,jdbcType=VARCHAR},
+      ac_level = #{acLevel,jdbcType=VARCHAR},
+      dr_level = #{drLevel,jdbcType=VARCHAR},
+      infra_id = #{infraId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where software_num = #{softwareNum,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select software_num, software_sys_code, software_name, software_code, type, core_software_mark, 
+    status, launch_date, offline_date, dept, business_owner, product_leader, ba_primary, 
+    ba_secondary, sa_primary, sa_secondary, test_leader, service_primary, service_secondary, 
+    Project_leader, description, customer_sys_name, business_rep, procure_method, dev_method, 
+    cooperation_partner, ac_level, dr_level, infra_id, state
+    from bas_sof_product
+    where software_num = #{softwareNum,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectAll" resultType="com.dcmd.arch.api.entity.SoftwareProduct">
+   SELECT
+	p.software_num AS softwareNum,
+	pa.`Value` AS softwareSysName,
+	p.software_sys_code AS softwareSysCode,
+	p.software_name AS softwareName,
+	p.type,
+	p.core_software_mark AS coreSoftwareMark,
+	ba.`Value` AS coreSoftwareMarkName,
+	p.`status` AS STATUS,
+	b.`Value` AS statusName,
+	p.launch_date AS launchDate,
+	p.offline_date AS offlineDate,
+	p.dept,
+	t1.Department AS deptName,
+	p.business_owner AS businessOwner,
+	u.Department AS businessOwnerName,
+	p.product_leader AS productLeader,
+	t2.NAME AS productLeaderName,
+	p.ba_primary AS baPrimary,
+	t3.`Name` AS baPrimaryName,
+	p.ba_secondary AS baSecondary,
+	t4.`Name` AS baSecondaryName,
+	p.sa_primary AS saPrimary,
+	t5.`Name` AS saPrimaryName,
+	p.sa_secondary AS saSecondary,
+	t6.`Name` AS saSecondaryName,
+	p.test_leader AS testLeader,
+	t7.`Name` AS testLeaderName,
+	p.service_primary AS servicePrimary,
+	t8.`Name` AS servicePrimaryName,
+	p.service_secondary AS serviceSecondary,
+	t9.`Name` AS serviceSecondaryName,
+	p.Project_leader AS projectLeader,
+	p.description,
+	p.customer_sys_name AS customerSysName,
+	p.business_rep AS businessRep,
+	p.procure_method AS procureMethod,
+	b1.`Value` AS procureMethodName,
+	p.dev_method AS devMethod,
+	b2.`Value` AS devMethodName,
+	p.cooperation_partner AS cooperationPartner,
+	p.ac_level AS acLevel,
+	p.dr_level AS drLevel,
+	p.infra_id AS infraId,
+	p.state
+FROM
+	bas_sof_product p
+	LEFT JOIN bas_parameter pa ON p.software_sys_code = pa.`Key`
+	AND pa.Type = 'SoftSys'
+	LEFT JOIN bas_parameter ba ON p.core_software_mark = ba.`Key`
+	AND ba.Type = 'softwareMark'
+	LEFT JOIN bas_parameter b ON p.`status` = b.`Key`
+	AND b.Type = 'SoftProdStatus'
+	LEFT JOIN bas_parameter b1 ON p.`procure_method` = b1.`Key`
+	AND b1.Type = 'ProcureMethod'
+	LEFT JOIN bas_parameter b2 ON p.`dev_method` = b2.`Key`
+	AND b2.Type = 'ImpMethod'
+	LEFT JOIN ( SELECT DISTINCT Department, DepartmentNo FROM t_userMaster WHERE DepartmentNo IN ( SELECT InstNo FROM t_institution WHERE InstProperty = 'IT' ) ) t1 ON p.dept = t1.DepartmentNo
+	LEFT JOIN ( SELECT DISTINCT Department, DepartmentNo FROM t_userMaster WHERE DepartmentNo IN ( SELECT InstNo FROM t_institution WHERE InstProperty = 'BU' ) ) u ON p.business_owner = u.DepartmentNo
+	LEFT JOIN t_userMaster t2 ON p.product_leader = t2.EmployeeID
+	LEFT JOIN t_userMaster t3 ON p.ba_primary = t3.EmployeeID
+	LEFT JOIN t_userMaster t4 ON p.ba_secondary = t4.EmployeeID
+	LEFT JOIN t_userMaster t5 ON p.sa_primary = t5.EmployeeID
+	LEFT JOIN t_userMaster t6 ON p.sa_secondary = t6.EmployeeID
+	LEFT JOIN t_userMaster t7 ON p.test_leader = t7.EmployeeID
+	LEFT JOIN t_userMaster t8 ON p.service_primary = t8.EmployeeID
+	LEFT JOIN t_userMaster t9 ON p.service_secondary = t9.EmployeeID
+  </select>
+
+
+
+  <select id="queryProductList" resultMap="BaseResultMap">
+    select * from bas_sof_product t WHERE t.state!=1 order by convert(t.software_num,SIGNED) desc
+  </select>
+
+
+  <select id="check" resultMap="BaseResultMap">
+    select * from bas_sof_product t WHERE t.state=1 order by convert(t.software_num,SIGNED) desc
+  </select>
+  <!--单条复核通过-->
+  <update id="checkUpdate" parameterType="java.lang.String">
+    update bas_sof_product set state = '0' where software_num = #{softwareNum}
+  </update>
+  <!--批量复核通过-->
+  <update id="pass" parameterType="java.lang.String">
+    update bas_sof_product set state = '0' where software_num in
+    <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+
+  <select id="getAllSoftProd" resultMap="BaseResultMap">
+    SELECT software_num, software_name FROM bas_sof_product
+  </select>
+
+  <select id="getRole" parameterType="Map" resultType="java.lang.String">
+   select DISTINCT role from t_userrole where userOrGroup=#{product_leader,jdbcType=VARCHAR} or userOrGroup
+   in <foreach collection="namesList" item="item" index="index" separator="," open="(" close=")">
+    #{item}
+  </foreach>
+    order by role ASC LIMIT 1
+  </select>
+
+  <select id="getSoftProd" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT software_num, software_name FROM bas_sof_product where product_leader=#{product_leader,jdbcType=VARCHAR}
+  </select>
+
+  <select id="search" parameterType="com.dcmd.arch.api.entity.SoftwareProduct" resultMap="BaseResultMap">
+  select * from bas_sof_product t WHERE 1 = 1
+  <if test="softwareSysCode != null and softwareSysCode != ''">
+      and t.software_sys_code = #{softwareSysCode,jdbcType=VARCHAR}
+  </if>
+  <if test="softwareName != null and softwareName != ''">
+      and t.software_name = #{softwareName,jdbcType=VARCHAR}
+  </if>
+  <if test="softwareCode != null and softwareCode != ''">
+      and t.software_code = #{softwareCode,jdbcType=VARCHAR}
+  </if>
+  <if test="type != null and type != ''">
+      and t.type = #{type,jdbcType=VARCHAR}
+  </if>
+  <if test="coreSoftwareMark != null and coreSoftwareMark != ''">
+      and t.core_software_mark = #{coreSoftwareMark,jdbcType=VARCHAR}
+  </if>
+  <if test="status != null and status != ''">
+      and t.status = #{status,jdbcType=VARCHAR}
+  </if>
+  <if test="launchDate != null and launchDate != ''">
+      and t.launch_date = #{launchDate,jdbcType=VARCHAR}
+  </if>
+  <if test="offlineDate != null and offlineDate != ''">
+      and t.offline_date = #{offlineDate,jdbcType=VARCHAR}
+  </if>
+  <if test="dept != null and dept != ''">
+      and t.dept = #{dept,jdbcType=VARCHAR}
+  </if>
+  <if test="businessOwner != null and businessOwner != ''">
+      and t.business_owner = #{businessOwner,jdbcType=VARCHAR}
+  </if>
+  <if test="productLeader != null and productLeader != ''">
+      and t.product_leader = #{productLeader,jdbcType=VARCHAR}
+  </if>
+  <if test="baPrimary != null and baPrimary != ''">
+      and t.ba_primary = #{baPrimary,jdbcType=VARCHAR}
+  </if>
+  <if test="baSecondary != null and baSecondary != ''">
+      and t.ba_secondary = #{baSecondary,jdbcType=VARCHAR}
+  </if>
+  <if test="saPrimary != null and saPrimary != ''">
+      and t.sa_primary = #{saPrimary,jdbcType=VARCHAR}
+  </if>
+  <if test="saSecondary != null and saSecondary != ''">
+      and t.sa_secondary = #{saSecondary,jdbcType=VARCHAR}
+  </if>
+  <if test="testLeader != null and testLeader != ''">
+      and t.test_leader = #{testLeader,jdbcType=VARCHAR}
+  </if>
+  <if test="servicePrimary != null and servicePrimary != ''">
+      and t.service_primary = #{servicePrimary,jdbcType=VARCHAR}
+  </if>
+  <if test="serviceSecondary != null and serviceSecondary != ''">
+      and t.service_secondary = #{serviceSecondary,jdbcType=VARCHAR}
+  </if>
+  <if test="projectLeader != null and projectLeader != ''">
+      and t.Project_leader = #{projectLeader,jdbcType=VARCHAR}
+  </if>
+  <if test="description != null and description != ''">
+      and t.description = #{description,jdbcType=VARCHAR}
+  </if>
+  <if test="customerSysName != null and customerSysName != ''">
+      and t.customer_sys_name = #{customerSysName,jdbcType=VARCHAR}
+  </if>
+  <if test="businessRep != null and businessRep != ''">
+      and t.business_rep = #{businessRep,jdbcType=VARCHAR}
+  </if>
+  <if test="procureMethod != null and procureMethod != ''">
+      and t.procure_method = #{procureMethod,jdbcType=VARCHAR}
+  </if>
+  <if test="devMethod != null and devMethod != ''">
+      and t.dev_method = #{devMethod,jdbcType=VARCHAR}
+  </if>
+  <if test="cooperationPartner != null and cooperationPartner != ''">
+      and t.cooperation_partner = #{cooperationPartner,jdbcType=VARCHAR}
+  </if>
+  <if test="acLevel != null and acLevel != ''">
+      and t.ac_level = #{acLevel,jdbcType=VARCHAR}
+  </if>
+  <if test="drLevel != null and drLevel != ''">
+      and t.dr_level = #{drLevel,jdbcType=VARCHAR}
+  </if>
+  order by convert(t.software_num,SIGNED) desc
+  </select>
+
+  <!--多条删除-->
+  <delete id="deleteIds">
+    DELETE FROM
+    bas_sof_product
+    where
+    software_num in
+    <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+<select id="getDepartment" resultType="java.util.Map">
+  	SELECT DISTINCT DepartmentNo,Department from t_userMaster where DepartmentNo in (select InstNo from t_institution where InstProperty='IT')
+</select>
+
+<!--查询产品是否重复-->
+    <select id="selectUserFromUserList" parameterType="list" resultType="string">
+        SELECT software_name FROM bas_sof_product
+        where software_name in (
+        <foreach collection="list" item="user" index="index" separator=",">
+            #{user.softwareName}
+        </foreach>
+        )
+    </select>
+
+    <!--获取getSoftwareName-->
+    <select id="getSoftwareName" resultType="java.util.Map">
+    SELECT DISTINCT
+	t.software_num,
+	t.software_name
+FROM
+	bas_sof_product t
+WHERE
+	t.STATUS = 'Online'
+  </select>
+    <!-- 根据产品线类型获取产品-->
+    <select id="findProductByProductLineType" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT  CONCAT(software_num) AS value, software_name  AS label  FROM bas_sof_product  WHERE software_sys_code = #{productType}
+    </select>
+
+    <select id="getProduct" resultType="com.dcmd.common.core.vo.SoftwareProductVo">
+        SELECT software_num AS softwareNum,software_name AS softwareName from bas_sof_product
+
+    </select>
+
+</mapper>

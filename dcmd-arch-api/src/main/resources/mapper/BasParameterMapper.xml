@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.BasParameterMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.BasParameter">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="Type" jdbcType="VARCHAR" property="type" />
+    <result column="Parent" jdbcType="VARCHAR" property="parent" />
+    <result column="Key" jdbcType="VARCHAR" property="key" />
+    <result column="Value" jdbcType="VARCHAR" property="value" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bas_parameter
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.BasParameter">
+    insert into bas_parameter (ID,Type,Parent,`Key`,`Value`)
+    values (#{id}, #{type}, #{parent},#{key},#{value})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.BasParameter">
+    update bas_parameter
+    set Type = #{type},
+      Parent = #{parent},
+      `Key`= #{key},
+      `Value`= #{value}
+    where ID = #{id}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID,Type,Parent,`Key`,`Value`
+    from bas_parameter
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    	SELECT ID,Type,Parent,`Key`,`Value` FROM bas_parameter
+  </select>
+
+
+  <select id="getSoftStatus" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='SoftProdStatus'
+  </select>
+
+  <select id="getProcMethod" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='ProcureMethod'
+  </select>
+
+  <select id="getACLevel" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='ACLevel'
+  </select>
+
+  <select id="getDevMethod" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='ImpMethod'
+  </select>
+
+  <!--获取软件系统-->
+  <select id="getSoftSys" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='SoftSys'
+  </select>
+
+  <select id="getIEName" resultMap="BaseResultMap">
+   SELECT t.Key,t.Value FROM bas_parameter t WHERE t.Type='Browser'
+  </select>
+
+  <select id="getUserType" resultMap="BaseResultMap">
+   SELECT t.Key,t.Value FROM bas_parameter t WHERE t.Type='UserType'
+  </select>
+
+  <!--获取软件标志-->
+  <select id="getSoftwareMark" resultMap="BaseResultMap">
+   SELECT * FROM bas_parameter WHERE Type='softwareMark'
+  </select>
+
+
+  <!--多条删除-->
+  <delete id="deleteIds">
+    DELETE FROM
+    bas_parameter
+    where
+    id in
+    <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!--获取产品线 -->
+  <select id="getProductInfo" resultType="java.util.Map">
+    SELECT a.`Key` AS productType,CONCAT(a.id) AS value, a.`Value` AS label FROM  bas_parameter AS a  where a. Type = 'SoftSys'
+  </select>
+
+  <select id="getProductLine" resultType="com.dcmd.common.core.vo.BasParameterVo">
+      SELECT a.ID AS id,a.`Value` AS value FROM  bas_parameter AS a  where a. Type = 'SoftSys'
+  </select>
+
+</mapper>

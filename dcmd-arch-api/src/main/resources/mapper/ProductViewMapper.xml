@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.ProductViewMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.ProductView">
+    <result column="int_service_num" jdbcType="INTEGER" property="intServiceNum" />
+    <result column="invoke_int_service_num" jdbcType="INTEGER" property="invokeIntServiceNum" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="valid_date" jdbcType="VARCHAR" property="validDate" />
+    <result column="origin_type" jdbcType="VARCHAR" property="originType" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.ProductView">
+    insert into int_invoke_relation (int_service_num, invoke_int_service_num, 
+      state, valid_date, origin_type, 
+      status)
+    values (#{intServiceNum,jdbcType=INTEGER}, #{invokeIntServiceNum,jdbcType=INTEGER}, 
+      #{state,jdbcType=VARCHAR}, #{validDate,jdbcType=VARCHAR}, #{originType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select int_service_num, invoke_int_service_num, state, valid_date, origin_type, status
+    from int_invoke_relation
+  </select>
+
+  
+  <select id="getSourceNum" resultType="java.util.Map">
+    SELECT
+	c.software_num AS target,
+	d.software_num AS source,
+	count( a.int_service_num ) AS num
+FROM
+	int_invoke_relation a
+	INNER JOIN int_information b ON b.int_service_num = a.int_service_num
+	INNER JOIN bas_sof_product c ON b.software_num = c.software_num
+	INNER JOIN int_information e ON e.int_service_num = a.invoke_int_service_num
+	INNER JOIN bas_sof_product d ON e.software_num = d.software_num
+WHERE
+	c.STATUS = 'Online'
+	AND d.STATUS = 'Online'
+	AND a.int_service_num IN ( SELECT int_service_num FROM int_information WHERE software_num = c.software_num )
+	AND a.invoke_int_service_num IN ( SELECT int_service_num FROM int_information WHERE software_num = d.software_num )
+GROUP BY
+	c.software_num,
+	d.software_num
+  </select>
+
+  <select id="getCountNum" resultType="java.lang.Integer" parameterType="java.lang.String">
+      select COUNT(*) num from t_other_statistics where Department  like concat('%',#{department},'%')  AND EmployeeID != 17627
+      <if test="type!=all">
+          AND Type=#{type}
+      </if>
+      <if test="time == 1">
+          AND to_days(#{UseTime}) = to_days(now())
+      </if>
+      <if test="time == 2">
+          AND DATE_SUB(CURDATE(), INTERVAL 7 DAY)  &lt;date(#{UseTime})
+      </if>
+      <if test="time == 3">
+          AND DATE_FORMAT(#{UseTime}, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+      </if>
+  </select>
+
+<select id="get" resultType="java.lang.String">
+    	SELECT DISTINCT Department from t_userMaster where DepartmentNo in (select InstNo from t_institution where InstProperty='IT')
+</select>
+
+</mapper>

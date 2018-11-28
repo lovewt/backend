@@ -1,0 +1,23 @@
+import groovy.json.JsonSlurperClassic
+
+pipeline {
+    agent any
+
+    stages {
+        stage("Build") {
+            steps {
+                script {
+                    sh "cd dcmd-common-core; gradle build"
+                }
+            }
+        }
+        stage("Upload") {
+            steps {
+                script {
+                    sh "cd dcmd-common-core; gradle upload"
+                }
+            }
+        }
+
+    }
+}

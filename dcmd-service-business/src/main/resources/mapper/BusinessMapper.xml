@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.service.business.mapper.BusinessMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.service.business.entity.Business">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="business_class" jdbcType="VARCHAR" property="businessClass" />
+    <result column="one_level" jdbcType="VARCHAR" property="oneLevel" />
+    <result column="two_level" jdbcType="VARCHAR" property="twoLevel" />
+    <result column="three_level" jdbcType="VARCHAR" property="threeLevel" />
+    <result column="four_level" jdbcType="VARCHAR" property="fourLevel" />
+    <result column="five_level" jdbcType="VARCHAR" property="fiveLevel" />
+    <result column="features" jdbcType="VARCHAR" property="features" />
+    <result column="features_business" jdbcType="VARCHAR" property="featuresBusiness" />
+    <result column="software_num" jdbcType="VARCHAR" property="softwareNum" />
+  </resultMap>
+  <sql id="reuse">
+    id,business_class, one_level, two_level, three_level, four_level,five_level, features, features_business,
+    software_num
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_comp_business
+    where id = #{id}
+  </delete>
+  
+  <delete id="deletes" parameterType="java.lang.Long">
+    delete from t_comp_business_level
+    where id in
+    <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="java.util.Map">
+    insert into t_comp_business_level (name,features_business,software_num,pid )
+    values (#{features},#{featuresBusiness},#{softwareNum},#{pid})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="java.util.Map">
+    update t_comp_business_level
+    set features_business=#{featuresBusiness},
+    software_num=#{softwareNum},
+    pid=#{pid}
+    where id = #{featuresId}
+  </update>
+  <select id="selectAll" resultType="com.dcmd.service.business.entity.Business">
+   SELECT
+	t.id,
+	t.business_class as businessClass,
+	t.one_level as oneLevel,
+	t.two_level AS twoLevel ,
+	t.three_level AS threeLevel,
+	t.four_level AS fourLevel,
+	t.five_level AS fiveLevel,
+	t.features,
+	t.features_business AS featuresBusiness,
+	t.software_num AS softwareNum,
+	b.software_name as softwareName
+FROM
+	t_comp_business t
+	LEFT JOIN bas_sof_product b ON t.software_num = b.software_num
+  </select>
+
+  <select id="selectAllByGradeOrFeaturesOrBusinessOrSoftwareNum" parameterType="java.util.Map" resultType="java.util.Map">
+      select
+           <include refid="reuse"/>
+       from t_comp_business
+      where 1=1
+    <if test="oneLevel!=null and oneLevel !=''">
+      AND one_level=#{oneLevel}
+    </if>
+    <if test="twoLevel!=null and twoLevel !=''">
+      AND two_level=#{twoLevel}
+    </if>
+    <if test="threeLevel!=null and threeLevel !=''">
+      AND three_level=#{threeLevel}
+    </if>
+    <if test="fourLevel!=null and fourLevel !=''">
+      AND four_level=#{fourLevel}
+    </if>
+    <if test="features!=null">
+      AND features=#{features}
+    </if>
+    <if test="featuresBusiness!=null">
+      AND features_business=#{featuresBusiness}
+    </if>
+    <if test="softwareNum!=null">
+      AND software_num=#{softwareNum}
+    </if>
+
+  </select>
+
+<!--查询软件产品-->
+  <select id="getProductName" resultType="java.util.Map">
+ SELECT DISTINCT
+	t.software_num,
+	b.software_name
+FROM
+	t_comp_business t
+	LEFT JOIN bas_sof_product b ON t.software_num = b.software_num
+  </select>
+
+  <select id="getFunctionPoint" resultType="com.dcmd.service.business.entity.Business">
+      SELECT a.id AS featuresId,
+      a.name AS features,
+      a.business_id AS businessId,
+      a.software_num AS softwareNum,
+      a.features_business AS featuresBusiness,
+      t1.value AS featuresBusinessName
+       FROM t_comp_features a
+       LEFT JOIN  t_sys_parameter t1 ON a.features_business=t1.key AND t1.type='FeaturesBusiness'
+  </select>
+
+  <select id="getLevelInfo" resultType="com.dcmd.service.business.entity.Business">
+      SELECT a.id AS id,a.name AS name,a.pid AS pid FROM t_comp_business_level a
+  </select>
+
+</mapper>

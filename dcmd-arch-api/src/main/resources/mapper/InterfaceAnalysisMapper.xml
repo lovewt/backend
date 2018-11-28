@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.InterfaceAnalysisMapper">
+    <sql id="selectDatas">
+    SELECT
+    a.int_service_num AS intServiceNum,
+    a.software_num AS softwareNum,
+    a.great_class AS greatClass,
+    a.state AS state,
+    a.int_name_cn AS intNameCn,
+    a.int_name_en AS intNameEn,
+    a.description AS description,
+    a.URL AS url,
+    a.review_number AS reviewNumber,
+    a.downline_date AS downlineDate,
+    a.release_date AS releaseDate,
+    a.interface_version AS interfaceVersion,
+    a.service_fit AS serviceFit,
+    a.consumer_fit AS consumerFit,
+    a.remark AS remark,
+    b.software_name AS softwareName,
+    t1.Value AS greatClassName,
+    t2.Value AS stateName,
+    t3.software_sys_code AS softwareSysCode
+    FROM int_information a
+    INNER JOIN bas_sof_product t3 ON a.software_num=t3.software_num
+    LEFT JOIN bas_sof_product b ON a.software_num = b.software_num
+    LEFT JOIN bas_parameter t1 ON a.great_class = t1.Key AND t1.Type='MajorClass'
+    LEFT JOIN bas_parameter t2 ON a.state = t2.Key AND t2.Type='RecordStatus'
+    </sql>
+    <select id="getAllDatas" resultType="com.dcmd.arch.api.entity.InterfaceAnalysis">
+        <include refid="selectDatas"/>
+        WHERE a.state!='Invalid' and a.status!='1' limit 0,2000
+    </select>
+    <select id="getCheckDatas" resultType="com.dcmd.arch.api.entity.InterfaceAnalysis">
+        <include refid="selectDatas"/>
+        WHERE a.status = '1'
+    </select>
+
+    <select id="getSoftLines" resultType="map">
+      SELECT DISTINCT `Key` AS value ,Value AS label FROM bas_parameter WHERE Type='SoftSys'
+    </select>
+    <select id="getSoftProduct" parameterType="String" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.software_name AS label,t.software_num AS value FROM bas_sof_product t where t.software_sys_code=#{softlineId}
+    </select>
+
+    <select id="searchState" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='RecordStatus'
+    </select>
+
+    <insert id="insert" parameterType="java.util.Map">
+        insert into int_information
+        (software_num,
+         great_class,
+         state,
+         int_name_cn,
+         int_name_en,
+         description,
+         URL,
+         review_number,
+         downline_date,
+         release_date,
+         service_fit,
+         consumer_fit,
+         interface_version,
+         remark,
+         status)
+         values(
+         #{softwareNum},
+         #{greatClass},
+         #{state},
+         #{intNameCn},
+         #{intNameEn},
+         #{description},
+         #{url},
+         #{reviewNumber},
+         #{downlineDate},
+         #{releaseDate},
+         #{serviceFit},
+         #{consumerFit},
+         #{interfaceVersion},
+         #{remark},
+         '1'
+          )
+    </insert>
+    <update id="update" parameterType="java.util.Map">
+      update int_information set
+         software_num=#{softwareNum},
+         great_class=#{greatClass},
+         state=#{state},
+         int_name_cn=#{intNameCn},
+         int_name_en=#{intNameEn},
+         description=#{description},
+         URL=#{url},
+         review_number=#{reviewNumber},
+         downline_date=#{downlineDate},
+         release_date=#{releaseDate},
+         service_fit=#{serviceFit},
+         consumer_fit=#{consumerFit},
+         interface_version=#{interfaceVersion},
+         remark=#{remark},
+         updt_date=#{updtDate},
+         status='1'
+         WHERE
+         int_service_num=#{intServiceNum}
+
+    </update>
+
+    <update id="updateCheck">
+      update int_information set status= '0' where int_service_num=#{intServiceNum}
+    </update>
+
+    <update id="batchUpdateCheck">
+        update int_information set status= '0' where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <delete id="deleteCheckByNum">
+        delete from int_information where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="batchDelectData">
+        update int_information set state='Invalid',status='1' where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </update>
+
+    <update id="release">
+        update int_information set status= '1',state = 'Released',release_date = (select  DATE_FORMAT(NOW(), '%Y-%m-%d')  from dual)
+        where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </update>
+
+    <update id="offLine">
+        update int_information set status= '1',state = 'Offline',downline_date = (select  DATE_FORMAT(NOW(), '%Y-%m-%d')  from dual)
+        where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </update>
+
+    <select id="queryNumAndName" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT a.software_num AS value ,a.software_name AS label FROM bas_sof_product a
+    </select>
+
+    <select id="queryRows" resultType="Integer">
+        SELECT COUNT(*)  FROM int_information WHERE int_name_en =#{intNameEn} AND interface_version=#{interfaceVersion}
+    </select>
+
+    <select id="queryCount" resultType="Integer">
+        select COUNT(1) FROM bas_sof_product where software_name=#{softwareName}
+    </select>
+
+    <insert id="insertExcelData" parameterType="com.dcmd.arch.api.entity.InterfaceAnalysis">
+        insert into int_information
+        (software_num,
+         great_class,
+         state,
+         int_name_cn,
+         int_name_en,
+         description,
+         URL,
+         review_number,
+         downline_date,
+         release_date,
+         service_fit,
+         consumer_fit,
+         interface_version,
+         remark,
+         status)
+         values(
+         #{softwareNum},
+         #{greatClass},
+         #{state},
+         #{intNameCn},
+         #{intNameEn},
+         #{description},
+         #{url},
+         #{reviewNumber},
+         #{downlineDate},
+         #{releaseDate},
+         #{serviceFit},
+         #{consumerFit},
+         #{interfaceVersion},
+         #{remark},
+         '1'
+          )
+    </insert>
+    <select id="queryNumByName" resultType="String">
+        SELECT int_service_num FROM int_information WHERE int_name_en=#{nameEn}
+    </select>
+
+    <select id="queryState" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='RecordStatus'
+    </select>
+
+    <select id="getClasses" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='MajorClass'
+    </select>
+
+</mapper>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.InterfaceIOMapper">
+    <sql id="selectDatas">
+        SELECT
+        a.id AS id,
+        a.type AS type,
+        a.orders AS orders,
+        a.name_en AS nameEn,
+        a.name_cn AS nameCn,
+        a.field_type AS fieldType,
+        a.lob AS lob,
+        a.describe AS describes,
+        t1.Value AS typeName
+        FROM
+        int_io_params a
+        LEFT JOIN bas_parameter t1 ON t1.Key=a.type AND t1.Type='PropertyType'
+    </sql>
+    <select id="getAllDatas" resultType="com.dcmd.arch.api.entity.InterfaceIO">
+        <include refid="selectDatas"/>
+        WHERE a.int_service_num=#{intServiceNum}
+        AND a.status!=1 ORDER BY a.type, a.orders
+    </select>
+
+    <select id="getTitleData" resultType="map">
+        SELECT b.int_name_cn AS intNameCn,b.int_name_en AS intNameEn FROM int_information b WHERE b.int_service_num=#{intServiceNum}
+    </select>
+    <select id="getCheckDatas" resultType="com.dcmd.arch.api.entity.InterfaceIO">
+        <include refid="selectDatas"/>
+        WHERE  a.int_service_num=#{intServiceNum}
+        AND a.status=1 ORDER BY a.type, a.orders
+    </select>
+
+    <select id="getSoftLines" resultType="map">
+      SELECT DISTINCT `Key` AS value ,Value AS label FROM bas_parameter WHERE Type='SoftSys'
+    </select>
+    <select id="getSoftProduct" parameterType="String" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.software_name AS label,t.software_num AS value FROM bas_sof_product t where t.software_sys_code=#{softlineId}
+    </select>
+
+    <select id="searchState" resultType="com.dcmd.arch.api.entity.Dropdown">
+      SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='RecordStatus'
+    </select>
+
+    <insert id="insert" parameterType="java.util.Map">
+        insert into int_io_params
+        (int_service_num,
+         type,
+         name_en,
+         name_cn,
+         field_type,
+         lob,
+         example,
+         describe,
+         orders,
+         status)
+         values(
+         #{intServiceNum},
+         #{type},
+         #{nameEn},
+         #{nameCn},
+         #{fieldType},
+         #{lob},
+         #{example},
+         #{describe},
+         #{orders},
+         '1'
+          )
+    </insert>
+    <update id="update" parameterType="java.util.Map">
+      update int_io_params set
+         int_service_num=#{intServiceNum},
+         type=#{type},
+         name_en=#{nameEn},
+         name_cn=#{nameCn},
+         field_type=#{fieldType},
+         lob=#{lob},
+         example=#{example},
+         describe=#{describe},
+         orders=#{orders},
+         status='1'
+         WHERE
+         id=#{id}
+
+    </update>
+
+    <update id="updateCheck">
+      update int_io_params set status= '0' where id=#{id}
+    </update>
+
+    <update id="batchUpdateCheck">
+        update int_io_params set status= '0' where id in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <delete id="deleteCheckByNum">
+        delete from int_io_params where id in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="batchDelectData">
+        update int_io_params set state='Invalid',status='1' where int_service_num in
+        <foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </update>
+
+
+
+    <select id="queryNumAndName" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT a.software_num AS value ,a.software_name AS label FROM bas_sof_product a
+    </select>
+
+    <select id="queryRows" resultType="Integer">
+        SELECT COUNT(*)  FROM int_information WHERE int_name_en =#{intNameEn} AND interface_version=#{interfaceVersion}
+    </select>
+
+    <select id="queryCount" resultType="Integer">
+        select COUNT(1) FROM bas_sof_product where software_name=#{softwareName}
+    </select>
+
+    <insert id="insertExcelData" parameterType="com.dcmd.arch.api.entity.InterfaceIO">
+        insert into int_information
+        (software_num,
+         great_class,
+         state,
+         int_name_cn,
+         int_name_en,
+         description,
+         URL,
+         review_number,
+         downline_date,
+         release_date,
+         service_fit,
+         consumer_fit,
+         interface_version,
+         remark,
+         status)
+         values(
+         #{softwareNum},
+         #{greatClass},
+         #{state},
+         #{intNameCn},
+         #{intNameEn},
+         #{description},
+         #{url},
+         #{reviewNumber},
+         #{downlineDate},
+         #{releaseDate},
+         #{serviceFit},
+         #{consumerFit},
+         #{interfaceVersion},
+         #{remark},
+         '1'
+          )
+    </insert>
+    <select id="queryNumByName" resultType="String">
+        SELECT int_service_num FROM int_information WHERE int_name_en=#{nameEn}
+    </select>
+
+    <select id="queryState" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='RecordStatus'
+    </select>
+
+    <select id="getClasses" resultType="com.dcmd.arch.api.entity.Dropdown">
+        SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='MajorClass'
+    </select>
+
+    <select id="getPropertyTypes" resultType="com.dcmd.arch.api.entity.Dropdown">
+       SELECT t.Key AS value ,t.Value AS label FROM bas_parameter t WHERE t.Type='PropertyType'
+    </select>
+
+</mapper>

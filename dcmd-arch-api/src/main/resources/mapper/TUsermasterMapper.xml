@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.arch.api.mapper.TUsermasterMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.TUsermaster">
+    <id column="EmployeeID" jdbcType="VARCHAR" property="employeeid" />
+    <result column="Gender" jdbcType="VARCHAR" property="gender" />
+    <result column="Name" jdbcType="VARCHAR" property="name" />
+    <result column="Tel" jdbcType="VARCHAR" property="tel" />
+    <result column="Mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="Email" jdbcType="VARCHAR" property="email" />
+    <result column="DepartmentNo" jdbcType="VARCHAR" property="departmentno" />
+    <result column="Department" jdbcType="VARCHAR" property="department" />
+    <result column="RelDepartmentNo" jdbcType="VARCHAR" property="reldepartmentno" />
+    <result column="RelDepartment" jdbcType="VARCHAR" property="reldepartment" />
+    <result column="Company" jdbcType="VARCHAR" property="company" />
+    <result column="IsEmployee" jdbcType="VARCHAR" property="isemployee" />
+    <result column="PRQuestion" jdbcType="VARCHAR" property="prquestion" />
+    <result column="PRAnswer" jdbcType="VARCHAR" property="pranswer" />
+    <result column="OTMID" jdbcType="VARCHAR" property="otmid" />
+    <result column="Title" jdbcType="VARCHAR" property="title" />
+    <result column="Role" jdbcType="VARCHAR" property="role" />
+    <result column="Status" jdbcType="VARCHAR" property="status" />
+    <result column="Comment" jdbcType="VARCHAR" property="comment" />
+    <result column="LastUpdateTS" jdbcType="TIMESTAMP" property="lastupdatets" />
+    <result column="BadgeNumber" jdbcType="VARCHAR" property="badgenumber" />
+    <result column="CreateTS" jdbcType="TIMESTAMP" property="createts" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_usermaster
+    where EmployeeID = #{employeeid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.TUsermaster">
+    insert into t_usermaster (EmployeeID, Gender, Name, 
+      Tel, Mobile, Email, 
+      DepartmentNo, Department, RelDepartmentNo, 
+      RelDepartment, Company, IsEmployee, 
+      PRQuestion, PRAnswer, OTMID, 
+      Title, Role, Status, 
+      Comment, LastUpdateTS, BadgeNumber, 
+      CreateTS)
+    values (#{employeeid,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{departmentno,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{reldepartmentno,jdbcType=VARCHAR}, 
+      #{reldepartment,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{isemployee,jdbcType=VARCHAR}, 
+      #{prquestion,jdbcType=VARCHAR}, #{pranswer,jdbcType=VARCHAR}, #{otmid,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{comment,jdbcType=VARCHAR}, #{lastupdatets,jdbcType=TIMESTAMP}, #{badgenumber,jdbcType=VARCHAR}, 
+      #{createts,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.TUsermaster">
+    update t_usermaster
+    set Gender = #{gender,jdbcType=VARCHAR},
+      Name = #{name,jdbcType=VARCHAR},
+      Tel = #{tel,jdbcType=VARCHAR},
+      Mobile = #{mobile,jdbcType=VARCHAR},
+      Email = #{email,jdbcType=VARCHAR},
+      DepartmentNo = #{departmentno,jdbcType=VARCHAR},
+      Department = #{department,jdbcType=VARCHAR},
+      RelDepartmentNo = #{reldepartmentno,jdbcType=VARCHAR},
+      RelDepartment = #{reldepartment,jdbcType=VARCHAR},
+      Company = #{company,jdbcType=VARCHAR},
+      IsEmployee = #{isemployee,jdbcType=VARCHAR},
+      PRQuestion = #{prquestion,jdbcType=VARCHAR},
+      PRAnswer = #{pranswer,jdbcType=VARCHAR},
+      OTMID = #{otmid,jdbcType=VARCHAR},
+      Title = #{title,jdbcType=VARCHAR},
+      Role = #{role,jdbcType=VARCHAR},
+      Status = #{status,jdbcType=VARCHAR},
+      Comment = #{comment,jdbcType=VARCHAR},
+      LastUpdateTS = #{lastupdatets,jdbcType=TIMESTAMP},
+      BadgeNumber = #{badgenumber,jdbcType=VARCHAR},
+      CreateTS = #{createts,jdbcType=TIMESTAMP}
+    where EmployeeID = #{employeeid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select EmployeeID, Gender, Name, Tel, Mobile, Email, DepartmentNo, Department, RelDepartmentNo, 
+    RelDepartment, Company, IsEmployee, PRQuestion, PRAnswer, OTMID, Title, Role, Status, 
+    Comment, LastUpdateTS, BadgeNumber, CreateTS
+    from t_usermaster
+    where EmployeeID = #{employeeid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select EmployeeID, Gender, Name, Tel, Mobile, Email, DepartmentNo, Department, RelDepartmentNo, 
+    RelDepartment, Company, IsEmployee, PRQuestion, PRAnswer, OTMID, Title, Role, Status, 
+    Comment, LastUpdateTS, BadgeNumber, CreateTS
+    from t_usermaster
+  </select>
+  <select id="getEmpOfSoft" resultMap="BaseResultMap">
+    SELECT EmployeeID, Name, Tel, Mobile, Email FROM t_userMaster WHERE IsEmployee = 'FE' and
+            DepartmentNo in (SELECT InstNo FROM t_institution WHERE InstProperty='IT')
+  </select>
+
+  <select id="getLeader" resultMap="BaseResultMap">
+    SELECT EmployeeID, Name from t_userMaster where DepartmentNo in (select InstNo from t_institution where InstProperty='IT') and Status='A' and IsEmployee='FE' order by EmployeeID
+  </select>
+  <select id="getPmo" resultMap="BaseResultMap">
+    SELECT EmployeeID, Name from t_userMaster where DepartmentNo='ZCBW' and Status='A' order by EmployeeID
+  </select>
+</mapper>

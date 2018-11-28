@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcmd.service.business.mapper.BusinessLevelMapper">
+  <select id="getBusinessLevelInfo" resultType="com.dcmd.service.business.entity.BusinessLevel" parameterType="java.lang.String">
+      SELECT a.id AS id,a.name AS name,a.pid AS pid FROM t_comp_business_level a
+  </select>
+
+    <!--新增-->
+    <insert id="insert" parameterType="com.dcmd.service.business.entity.BusinessLevel">
+        insert into t_comp_business_level (id,name,)values ()
+    </insert>
+
+
+<!--获取业务类型-->
+    <select id="getBusinessLevelType" resultType="com.dcmd.service.business.entity.Dropdown">
+      SELECT a.id AS value,a.name AS label FROM t_comp_business_level a where a.pid=0
+    </select>
+
+    <select id="getBusinessLevelList" parameterType="java.lang.String" resultType="com.dcmd.service.business.entity.Dropdown">
+      SELECT a.id AS value,a.name AS label FROM t_comp_business_level a where a.pid=#{id}
+    </select>
+
+    <select id="getAll" resultType="com.dcmd.service.business.entity.BusinessLevel">
+         SELECT * FROM  t_comp_business_level WHERE features_business IS NOT NULL
+    </select>
+
+    <select id="getAllByPid" parameterType="java.lang.String" resultType="com.dcmd.service.business.entity.BusinessLevel">
+         SELECT * FROM  t_comp_business_level WHERE pid=#{id}
+    </select>
+
+    <!--获取featuresBusiness相关-->
+<select id="getFeaturesBusinessList" resultType="com.dcmd.service.business.entity.Dropdown">
+    SELECT b.key AS value,b.value AS label FROM t_sys_parameter b WHERE b.type='FeaturesBusiness'
+</select>
+
+</mapper>

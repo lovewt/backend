@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.PlanMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.Plan">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="SoftProd" jdbcType="VARCHAR" property="softprod" />
+    <result column="Browser" jdbcType="VARCHAR" property="browser" />
+    <result column="Version" jdbcType="VARCHAR" property="version" />
+    <result column="Remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_br_comp_verified
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.Plan">
+    insert into t_br_comp_verified (ID, SoftProd, Browser,
+      Version, Remark)
+    values (#{id,jdbcType=INTEGER}, #{softprod,jdbcType=VARCHAR}, #{browser,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.Plan">
+    update t_br_comp_verified
+    set SoftProd = #{softprod,jdbcType=VARCHAR},
+      Browser = #{browser,jdbcType=VARCHAR},
+      Version = #{version,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, SoftProd, Browser, Version, Remark
+    from t_br_comp_verified
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select *
+    from t_br_comp_verified
+  </select>
+</mapper>

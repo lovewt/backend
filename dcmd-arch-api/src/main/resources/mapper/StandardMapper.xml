@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.StandardMapper">
+  <resultMap id="BaseResultMap" type="com.dcmd.arch.api.entity.Standard">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="Usertype" jdbcType="VARCHAR" property="usertype" />
+    <result column="Browser" jdbcType="VARCHAR" property="browser" />
+    <result column="Version" jdbcType="VARCHAR" property="version" />
+    <result column="Standard" jdbcType="VARCHAR" property="standard" />
+    <result column="Remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_br_comp_standard
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcmd.arch.api.entity.Standard">
+    insert into t_br_comp_standard (ID, Usertype, Browser, 
+      Version, Standard, Remarks
+      )
+    values (#{id,jdbcType=INTEGER}, #{usertype,jdbcType=VARCHAR}, #{browser,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcmd.arch.api.entity.Standard">
+    update t_br_comp_standard
+    set Usertype = #{usertype,jdbcType=VARCHAR},
+      Browser = #{browser,jdbcType=VARCHAR},
+      Version = #{version,jdbcType=VARCHAR},
+      Standard = #{standard,jdbcType=VARCHAR},
+      Remarks = #{remarks,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, Usertype, Browser, Version, Standard, Remarks
+    from t_br_comp_standard
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, Usertype, Browser, Version, Standard, Remarks
+    from t_br_comp_standard
+  </select>
+</mapper>
