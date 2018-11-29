@@ -43,12 +43,12 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    sh "cd dcmd-service-demand; gradle bootJar; cd .."
-                    sh "cd dcmd-service-business; gradle bootJar; cd .."
-                    sh "cd dcmd-arch-api; gradle bootJar; cd .."
-                    //sh "cd dcmd-service-demand; mvn install; cd .."
-                    //sh "cd dcmd-service-business; mvn install; cd .."
-                    //sh "cd dcmd-arch-api; mvn install; cd .."
+                    //sh "cd dcmd-service-demand; gradle bootJar; cd .."
+                    //sh "cd dcmd-service-business; gradle bootJar; cd .."
+                    //sh "cd dcmd-arch-api; gradle bootJar; cd .."
+                    sh "cd dcmd-service-demand; mvn install; cd .."
+                    sh "cd dcmd-service-business; mvn install; cd .."
+                    sh "cd dcmd-arch-api; mvn install; cd .."
                 }
             }
         }
